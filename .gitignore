@@ -1,0 +1,16 @@
+utils/*
+go.sum
+gin-bin
+.env
+.idea/*
+tmp/*
+.DS_Store
+~$report.xml
+   
+test_report.html
+
+report.xml
+
+coverage.out
+cover.out
+coverage.html
