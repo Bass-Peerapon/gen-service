@@ -6,7 +6,7 @@ package cmd
 import (
 	"os"
 
-	"github.com/inno-go/gen-service/cmd/create"
+	"github.com/Bass-Peerapon/gen-service/cmd/create"
 	"github.com/spf13/cobra"
 )
 

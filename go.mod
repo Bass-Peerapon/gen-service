@@ -1,4 +1,4 @@
-module github.com/inno-go/gen-service
+module github.com/Bass-Peerapon/gen-service
 
 go 1.19
 
