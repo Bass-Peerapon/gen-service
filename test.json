@@ -1,43 +1,44 @@
 {
-    "input_index": 0,
-    "candidate_index": 0,
-    "delivery_line_1": "1 N Rosedale St",
-    "last_line": "Baltimore MD 21229-3737",
-    "delivery_point_barcode": "212293737013",
-    "components": {
-        "primary_number": "1",
-        "street_predirection": "N",
-        "street_name": "Rosedale",
-        "street_suffix": "St",
-        "city_name": "Baltimore",
-        "state_abbreviation": "MD",
-        "zipcode": "21229",
-        "plus4_code": "3737",
-        "delivery_point": "01",
-        "delivery_point_check_digit": "3"
+    "franchisee_image": {
+        "url": "",
+        "original_filename": "",
+        "size": "",
+        "content_type": ""
     },
-    "metadata": {
-        "record_type": "S",
-        "zip_type": "Standard",
-        "county_fips": "24510",
-        "county_name": "Baltimore City",
-        "carrier_route": "C047",
-        "congressional_district": "07",
-        "rdi": "Residential",
-        "elot_sequence": "0059",
-        "elot_sort": "A",
-        "latitude": 39.28602,
-        "longitude": -76.6689,
-        "precision": "Zip9",
-        "time_zone": "Eastern",
-        "utc_offset": -5,
-        "dst": true
+    "franchisee_code": "233333333",
+    "franchisee_name_th": "บริษัท ทดสอบบั้ค จำกัด",
+    "franchisee_name_en": "Test Bug Co.,Ltd",
+    "tax_number": "324234234234234",
+    "branch": "สำนักงานใหญ่",
+    "type_of_franchisee": "Center",
+    "franchisee_center_code": "",
+    "location": {
+        "address": "126",
+        "district": "ชานุมาน",
+        "subdistrict": "โคกสาร",
+        "province": "อำนาจเจริญ",
+        "country": "ไทย",
+        "postal_code": "37210",
+        "lat": 16.156,
+        "lng": 104.996
     },
-    "analysis": {
-        "dpv_match_code": "Y",
-        "dpv_footnotes": "AABB",
-        "dpv_cmra": "N",
-        "dpv_vacant": "N",
-        "active": "Y"
-    }
+    "franchisee_contacts": [
+        {
+            "contact_name": "Tassaneewan Noita",
+            "contact_position": "Manager",
+            "contact_emails": [
+                "tassaneewan.mild@mail.kmutt.ac.th"
+            ],
+            "contact_tels": [
+                "0956787294"
+            ]
+        }
+    ],
+    "franchisee_sale_reps": [
+        {
+            "sale_rep_id": "fda9c3de-131c-46e9-ba21-21ed4ef73069",
+            "sold_to_province_code": "370",
+            "sales_district_code": "ZGET01"
+        }
+    ]
 }

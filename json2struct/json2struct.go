@@ -127,12 +127,24 @@ func generateTypes(structName string, obj map[string]interface{}, depth int) str
 			typ = "-"
 			db = "-"
 			valueType = "[]" + generateTypes(fmtFieldName(strcase.ToSnake(key)), value[0], depth+1) + "}"
+			goto FILENAME
 		case map[string]interface{}:
 			typ = "-"
 			db = "-"
 			valueType = generateTypes(fmtFieldName(strcase.ToSnake(key)), value, depth+1) + "}"
+			goto FILENAME
+		}
+		switch reflect.TypeOf(value).Kind() {
+		case reflect.Slice:
+			typ = "-"
+			db = "-"
+
+		case reflect.Array:
+			typ = "-"
+			db = "-"
 		}
 
+	FILENAME:
 		fieldName := fmtFieldName(stringifyFirstChar(key))
 		structure += fmt.Sprintf("\n%s %s `json:\"%s\" db:\"%s\" type:\"%s\"`",
 			fieldName,
