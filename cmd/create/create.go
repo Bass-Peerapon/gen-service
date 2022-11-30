@@ -23,6 +23,7 @@ var CreateCmd = &cobra.Command{
 func addSubcommandPalettes() {
 	CreateCmd.AddCommand(subcreate.ServiceCmd)
 	CreateCmd.AddCommand(subcreate.ModelCmd)
+	CreateCmd.AddCommand(subcreate.NewWithParamsCmd)
 }
 
 func init() {
