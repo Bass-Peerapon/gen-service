@@ -14,6 +14,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"golang.org/x/tools/imports"
 )
 
 // newWithParamsCmd represents the newWithParams command
@@ -133,7 +134,6 @@ func Generator(fileName string) error {
 		fo, _ := os.ReadFile(fileName)
 		file, _ := os.Create(fileName)
 		w := bufio.NewWriter(file)
-		defer w.Flush()
 		fmt.Fprintf(w, string(fo))
 		reg := regexp.MustCompile(`\S+`)
 
@@ -202,6 +202,17 @@ func Generator(fileName string) error {
 
 			break
 		}
+		w.Flush()
+	}
+	code, err := imports.Process(fileName, nil, &imports.Options{
+		Comments: true,
+	})
+	if err != nil {
+		return err
+	}
+
+	if err := os.WriteFile(fileName, code, 0644); err != nil {
+		return err
 	}
 	fmt.Println("success")
 	return nil

@@ -24,6 +24,7 @@ func addSubcommandPalettes() {
 	CreateCmd.AddCommand(subcreate.ServiceCmd)
 	CreateCmd.AddCommand(subcreate.ModelCmd)
 	CreateCmd.AddCommand(subcreate.NewWithParamsCmd)
+	CreateCmd.AddCommand(subcreate.CrudRepoCmd)
 }
 
 func init() {

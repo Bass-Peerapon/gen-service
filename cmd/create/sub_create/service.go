@@ -187,7 +187,7 @@ func Generate(serviceName string) error {
 	}
 
 	if err := InjectServiceInMain(s); err != nil {
-
+		return err
 	}
 
 	return nil
