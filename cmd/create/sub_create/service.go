@@ -139,7 +139,7 @@ type {{.LowerCamelCase}}Handler struct {
 	{{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase
 }
 
-func New{{.LowerCamelCase}}Handler({{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase) {{.Name}}.{{.CamelCase}}Repository {
+func New{{.LowerCamelCase}}Handler({{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase) {{.Name}}.{{.CamelCase}}Handler {
 	return &{{.LowerCamelCase}}Handler{
 		{{.LowerCamelCase}}Us:   {{.LowerCamelCase}}Us,	
 	}
