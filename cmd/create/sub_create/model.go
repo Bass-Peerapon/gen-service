@@ -175,7 +175,7 @@ func generateModel(model *Model) error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 
@@ -213,7 +213,7 @@ func generateOrm(model *Model) error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 

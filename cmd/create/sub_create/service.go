@@ -221,7 +221,7 @@ func (s Service) generateReposirory() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 	return nil
@@ -247,7 +247,7 @@ func (s Service) generateUsecase() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 	return nil
@@ -273,7 +273,7 @@ func (s Service) generateHandler() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 	return nil
@@ -295,7 +295,7 @@ func (s Service) generateReposiroryAdapter() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 
@@ -318,7 +318,7 @@ func (s Service) generateUsecaseAdapter() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 
@@ -341,7 +341,7 @@ func (s Service) generateHandlerAdapter() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 
@@ -367,7 +367,7 @@ func (s Service) generateValidator() error {
 		return err
 	}
 
-	if err := os.WriteFile(fn, code, os.ModePerm); err != nil {
+	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
 
