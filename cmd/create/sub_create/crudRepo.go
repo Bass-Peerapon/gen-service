@@ -5,6 +5,7 @@ package subcreate
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -121,15 +122,19 @@ func init() {
 	CrudRepoCmd.Flags().BoolP("delete", "d", false, "generate sql script delete")
 }
 
-func getTag(s string) string {
-	return strings.ReplaceAll(strings.ReplaceAll(strings.TrimSpace(s), "db:", ""), `"`, "")
+func getTag(s string) (string, error) {
+	tag := strings.ReplaceAll(strings.ReplaceAll(strings.TrimSpace(s), "db:", ""), `"`, "")
+	if tag == "" {
+		return "", errors.New("not found tag `db`")
+	}
+	return tag, nil
 }
 
 func genCreate(fn string, fnOut string) error {
 	fmt.Println("Start generate create")
-	m, tagsDB, shouldReturn, returnValue := readModel(fn)
-	if shouldReturn {
-		return returnValue
+	m, tagsDB, err := readModel(fn)
+	if err != nil {
+		return err
 	}
 
 	mOut, err := getModelFromRepo(fnOut)
@@ -217,9 +222,9 @@ func genCreate(fn string, fnOut string) error {
 
 func genRead(fn string, fnOut string) error {
 	fmt.Println("Start generate read")
-	m, tagsDB, shouldReturn, returnValue := readModel(fn)
-	if shouldReturn {
-		return returnValue
+	m, tagsDB, err := readModel(fn)
+	if err != nil {
+		return err
 	}
 
 	mOut, err := getModelFromRepo(fnOut)
@@ -238,7 +243,7 @@ func genRead(fn string, fnOut string) error {
 	}
 	fo, _ := os.ReadFile(fnOut)
 	tmp := `
-	func (p {{.OutPut.LowerCamelCase}}) Fetch{{.Input.CamelCase}}s(ctx context.Context,args *sync.Map , paginator *helperModel.Paginator ,{{.Input.LowerCamelCase}}s []*models.{{.Input.CamelCase}}) ([]*models.{{.Input.CamelCase}},error) {
+	func (p {{.OutPut.LowerCamelCase}}) Fetch{{.Input.CamelCase}}s(ctx context.Context,args *sync.Map , paginator *helperModel.Paginator) ([]*models.{{.Input.CamelCase}},error) {
 		if args == nil {
 			args = new(sync.Map)
 		}
@@ -355,9 +360,9 @@ func genRead(fn string, fnOut string) error {
 
 func genUpdate(fn string, fnOut string) error {
 	fmt.Println("Start generate update")
-	m, tagsDB, shouldReturn, returnValue := readModel(fn)
-	if shouldReturn {
-		return returnValue
+	m, tagsDB, err := readModel(fn)
+	if err != nil {
+		return err
 	}
 
 	mOut, err := getModelFromRepo(fnOut)
@@ -383,6 +388,7 @@ func genUpdate(fn string, fnOut string) error {
 		}
 		
 		if err := p.update{{.Input.CamelCase}}(ctx, tx, id, {{.Input.LowerCamelCase}}); err != nil {
+			tx.Rollback()
 			return err
 		}
 	
@@ -449,9 +455,9 @@ func genUpdate(fn string, fnOut string) error {
 
 func genDelete(fn string, fnOut string) error {
 	fmt.Println("Start generate delete")
-	m, tagsDB, shouldReturn, returnValue := readModel(fn)
-	if shouldReturn {
-		return returnValue
+	m, tagsDB, err := readModel(fn)
+	if err != nil {
+		return err
 	}
 
 	mOut, err := getModelFromRepo(fnOut)
@@ -538,14 +544,14 @@ func genDelete(fn string, fnOut string) error {
 	return nil
 }
 
-func readModel(fn string) (*Model, []string, bool, error) {
+func readModel(fn string) (*Model, []string, error) {
 	var m *Model
 	var tagsDB []string
 
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, fn, nil, 0)
 	if err != nil {
-		return nil, nil, true, err
+		return nil, nil, err
 	}
 	reg := regexp.MustCompile(`db:"(.+)" `)
 	for range f.Scope.Objects {
@@ -566,7 +572,10 @@ func readModel(fn string) (*Model, []string, bool, error) {
 								tags := reg.FindAllString(tag, 1)
 								switch field.Type.(type) {
 								case *ast.StarExpr:
-									t := getTag(tags[0])
+									t, err := getTag(tags[0])
+									if err != nil {
+										return nil, nil, err
+									}
 									if t != "-" && t != "" {
 										tagsDB = append(tagsDB, t)
 									}
@@ -575,12 +584,18 @@ func readModel(fn string) (*Model, []string, bool, error) {
 									if arr.Lbrack.IsValid() {
 										switch arr.Elt.(type) {
 										case *ast.StarExpr:
-											t := getTag(tags[0])
+											t, err := getTag(tags[0])
+											if err != nil {
+												return nil, nil, err
+											}
 											if t != "-" && t != "" {
 												tagsDB = append(tagsDB, t)
 											}
 										case *ast.Ident:
-											t := getTag(tags[0])
+											t, err := getTag(tags[0])
+											if err != nil {
+												return nil, nil, err
+											}
 											if t != "-" && t != "" {
 												tagsDB = append(tagsDB, t)
 											}
@@ -588,7 +603,10 @@ func readModel(fn string) (*Model, []string, bool, error) {
 									}
 
 								case *ast.Ident:
-									t := getTag(tags[0])
+									t, err := getTag(tags[0])
+									if err != nil {
+										return nil, nil, err
+									}
 									if t != "-" && t != "" {
 										tagsDB = append(tagsDB, t)
 									}
@@ -601,7 +619,7 @@ func readModel(fn string) (*Model, []string, bool, error) {
 		}
 		break
 	}
-	return m, tagsDB, false, nil
+	return m, tagsDB, nil
 }
 
 func getModelFromRepo(fn string) (*Model, error) {

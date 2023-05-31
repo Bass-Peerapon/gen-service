@@ -182,6 +182,10 @@ func Generator(fileName string) error {
 										for _, name := range field.Names {
 											WriteIdent(w, tags[0], field, name)
 										}
+									case *ast.SelectorExpr:
+										for _, name := range field.Names {
+											WriteIdent(w, tags[0], field, name)
+										}
 									}
 								}
 							}
@@ -280,7 +284,12 @@ func WriteIdent(w *bufio.Writer, tag string, field *ast.Field, name *ast.Ident) 
 		fmt.Fprintf(w, "\t\t"+`ptr.%v = %s`+"\n", name.Name, GetCastTypeFunc(field.Type, v))
 	case "bool":
 		fmt.Fprintf(w, "\t\t"+`ptr.%v = %s`+"\n", name.Name, GetCastTypeFunc(field.Type, v))
-
+	case "&{zero String}":
+		fmt.Fprintf(w, "\t\t"+`ptr.%v = %s`+"\n", name.Name, GetCastTypeFunc(field.Type, v))
+	case "&{zero Int}":
+		fmt.Fprintf(w, "\t\t"+`ptr.%v = %s`+"\n", name.Name, GetCastTypeFunc(field.Type, v))
+	case "&{zero Float}":
+		fmt.Fprintf(w, "\t\t"+`ptr.%v = %s`+"\n", name.Name, GetCastTypeFunc(field.Type, v))
 	}
 }
 
@@ -309,7 +318,12 @@ func GetCastTypeFunc(expr ast.Expr, name string, subType ...string) string {
 				t = fmt.Sprintf("helperModel.NewTimestampFromTime(%s.(time.Time))", name)
 			}
 		}
-
+	case "&{zero String}":
+		t = fmt.Sprintf("zero.StringFrom(cast.ToString(%s))", name)
+	case "&{zero Int}":
+		t = fmt.Sprintf("zero.IntFrom(cast.ToInt64(%s))", name)
+	case "&{zero Float}":
+		t = fmt.Sprintf("zero.FloatFrom(cast.ToFloat64(%s))", name)
 	}
 
 	return t
