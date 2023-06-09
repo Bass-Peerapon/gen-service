@@ -574,7 +574,8 @@ func readModel(fn string) (*Model, []string, error) {
 								case *ast.StarExpr:
 									t, err := getTag(tags[0])
 									if err != nil {
-										return nil, nil, err
+										fmt.Println(err.Error())
+										continue
 									}
 									if t != "-" && t != "" {
 										tagsDB = append(tagsDB, t)
@@ -586,7 +587,8 @@ func readModel(fn string) (*Model, []string, error) {
 										case *ast.StarExpr:
 											t, err := getTag(tags[0])
 											if err != nil {
-												return nil, nil, err
+												fmt.Println(err.Error())
+												continue
 											}
 											if t != "-" && t != "" {
 												tagsDB = append(tagsDB, t)
@@ -594,7 +596,8 @@ func readModel(fn string) (*Model, []string, error) {
 										case *ast.Ident:
 											t, err := getTag(tags[0])
 											if err != nil {
-												return nil, nil, err
+												fmt.Println(err.Error())
+												continue
 											}
 											if t != "-" && t != "" {
 												tagsDB = append(tagsDB, t)
@@ -605,7 +608,8 @@ func readModel(fn string) (*Model, []string, error) {
 								case *ast.Ident:
 									t, err := getTag(tags[0])
 									if err != nil {
-										return nil, nil, err
+										fmt.Println(err.Error())
+										continue
 									}
 									if t != "-" && t != "" {
 										tagsDB = append(tagsDB, t)
