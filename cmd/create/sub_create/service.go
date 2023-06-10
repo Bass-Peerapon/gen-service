@@ -22,7 +22,7 @@ var ServiceCmd = &cobra.Command{
 	Short: "generate service",
 	Long:  ``,
 	Run: func(_ *cobra.Command, _ []string) {
-		fmt.Println("start create service" + serviceName)
+		fmt.Println("start create service " + serviceName)
 		Generate(serviceName)
 		fmt.Println("created service " + serviceName)
 
@@ -47,22 +47,35 @@ func init() {
 
 type Service struct {
 	Name           string
+	Version        string // ex. v1
 	CamelCase      string
 	LowerCamelCase string
 	defultPath     string
 }
 
 func NewService(name string) *Service {
+	//{service name}
+	//{service name}/{version}
+	splitName := strings.Split(name, "/")
+	var version string
+	switch len(splitName) {
+	case 2:
+		version = splitName[1]
+		fallthrough
+	case 1:
+		name = splitName[0]
+	}
+	defultPath := DEFULT_PATH + name
+	if version != "" {
+		defultPath = DEFULT_PATH + name + "/" + version
+	}
 	return &Service{
 		Name:           name,
+		Version:        version,
 		CamelCase:      strcase.ToCamel(name),
 		LowerCamelCase: strcase.ToLowerCamel(name),
-		defultPath:     DEFULT_PATH + name,
+		defultPath:     defultPath,
 	}
-}
-
-func (s *Service) SetDefultPath() {
-	s.defultPath = DEFULT_PATH + s.Name
 }
 
 func (s Service) GetDefultPath() string {
@@ -288,13 +301,15 @@ func (s Service) generateReposiroryAdapter() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
 	if err != nil {
 		return err
 	}
-
 	if err := os.WriteFile(fn, code, 0644); err != nil {
 		return err
 	}
@@ -385,10 +400,15 @@ func InjectServiceInMain(s *Service) error {
 	us_import_alias := fmt.Sprintf("_%s_%s", s.Name, USECASE)
 	http_import_alias := fmt.Sprintf("_%s_%s", s.Name, HTTP)
 	validator_import_alias := fmt.Sprintf("_%s_%s", s.Name, VALIDATOR)
-	repo_import := fmt.Sprintf("%s %s", repo_import_alias, strconv.Quote(dir+SERVICE_PATH+s.Name+"/"+REPO))
-	us_import := fmt.Sprintf("%s %s", us_import_alias, strconv.Quote(dir+SERVICE_PATH+s.Name+"/"+USECASE))
-	http_import := fmt.Sprintf("%s %s", http_import_alias, strconv.Quote(dir+SERVICE_PATH+s.Name+"/"+HTTP))
-	validate_import := fmt.Sprintf("%s %s", validator_import_alias, strconv.Quote(dir+SERVICE_PATH+s.Name+"/"+VALIDATOR))
+	var path string
+	path = s.Name
+	if s.Version != "" {
+		path = fmt.Sprintf("%s/%s", s.Name, s.Version)
+	}
+	repo_import := fmt.Sprintf("%s %s", repo_import_alias, strconv.Quote(dir+SERVICE_PATH+path+"/"+REPO))
+	us_import := fmt.Sprintf("%s %s", us_import_alias, strconv.Quote(dir+SERVICE_PATH+path+"/"+USECASE))
+	http_import := fmt.Sprintf("%s %s", http_import_alias, strconv.Quote(dir+SERVICE_PATH+path+"/"+HTTP))
+	validate_import := fmt.Sprintf("%s %s", validator_import_alias, strconv.Quote(dir+SERVICE_PATH+path+"/"+VALIDATOR))
 	fmt.Println(repo_import)
 	fmt.Println(us_import)
 	fmt.Println(http_import)
