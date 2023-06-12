@@ -280,7 +280,6 @@ func genRead(fn string, fnOut string) error {
 		paginatorSql,
 	)
 	sql = sqlx.Rebind(sqlx.DOLLAR, sql)
-	myHelper.Println(sql)
 	stmt, err := p.client.GetClient().PreparexContext(ctx, sql)
 	if err != nil {
 		return nil, err
