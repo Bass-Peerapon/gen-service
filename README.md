@@ -2,7 +2,7 @@
 
 # Gen-Service
 
-`gen-service` is a command-line tool used for generating an innovative service directory template. It helps developers quickly set up the necessary structure for their service-based projects. 
+`gen-service` is a command-line tool used for generating an innovasive service directory template. It helps developers quickly set up the necessary structure for their service-based projects. 
 
 ## Installation
 ```bash
