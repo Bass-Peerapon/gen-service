@@ -613,6 +613,16 @@ func readModel(fn string) (*Model, []string, error) {
 									if t != "-" && t != "" {
 										tagsDB = append(tagsDB, t)
 									}
+								case *ast.SelectorExpr:
+									t, err := getTag(tags[0])
+									if err != nil {
+										fmt.Println(err.Error())
+										continue
+									}
+									if t != "-" && t != "" {
+										tagsDB = append(tagsDB, t)
+									}
+
 								}
 							}
 						}
