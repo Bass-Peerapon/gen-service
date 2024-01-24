@@ -25,7 +25,6 @@ var ServiceCmd = &cobra.Command{
 		fmt.Println("start create service " + serviceName)
 		Generate(serviceName)
 		fmt.Println("created service " + serviceName)
-
 	},
 }
 
@@ -128,31 +127,33 @@ type {{.LowerCamelCase}}Repository struct {
 	client             *psql.Client
 }
 
-func New{{.LowerCamelCase}}Repository(client *psql.Client) {{.Name}}.{{.CamelCase}}Repository {
+func New{{.CamelCase}}Repository(client *psql.Client) {{.Name}}.{{.CamelCase}}Repository {
 	return &{{.LowerCamelCase}}Repository{
 		client:             client,	
 	}
 }
 `
+
 var tmpUsecase = `
 package usecase
-type {{.LowerCamelCase}}Usecase struct {
+type {{.CamelCase}}Usecase struct {
 	{{.LowerCamelCase}}Repo {{.Name}}.{{.CamelCase}}Repository
 }
 
-func New{{.LowerCamelCase}}Usecase({{.LowerCamelCase}}Repo {{.Name}}.{{.CamelCase}}Repository) {{.Name}}.{{.CamelCase}}Usecase {
+func New{{.CamelCase}}Usecase({{.LowerCamelCase}}Repo {{.Name}}.{{.CamelCase}}Repository) {{.Name}}.{{.CamelCase}}Usecase {
 	return &{{.LowerCamelCase}}Usecase{
 		{{.LowerCamelCase}}Repo : {{.LowerCamelCase}}Repo,	
 	}
 }
 `
+
 var tmpHttp = `
 package http
-type {{.LowerCamelCase}}Handler struct {
+type {{.CamelCase}}Handler struct {
 	{{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase
 }
 
-func New{{.LowerCamelCase}}Handler({{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase) {{.Name}}.{{.CamelCase}}Handler {
+func New{{.CamelCase}}Handler({{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase) {{.Name}}.{{.CamelCase}}Handler {
 	return &{{.LowerCamelCase}}Handler{
 		{{.LowerCamelCase}}Us:   {{.LowerCamelCase}}Us,	
 	}
@@ -166,9 +167,7 @@ type Validation struct{
 }
 `
 
-var (
-	serviceName string
-)
+var serviceName string
 
 func Generate(serviceName string) error {
 	s := NewService(serviceName)
@@ -227,6 +226,9 @@ func (s Service) generateReposirory() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
@@ -253,6 +255,9 @@ func (s Service) generateUsecase() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
@@ -279,6 +284,9 @@ func (s Service) generateHandler() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
@@ -326,6 +334,9 @@ func (s Service) generateUsecaseAdapter() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
@@ -349,6 +360,9 @@ func (s Service) generateHandlerAdapter() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
@@ -375,6 +389,9 @@ func (s Service) generateValidator() error {
 		return err
 	}
 	err = t.Execute(&buf, s)
+	if err != nil {
+		return err
+	}
 	code, err := imports.Process("", buf.Bytes(), &imports.Options{
 		Comments: true,
 	})
@@ -395,7 +412,7 @@ func InjectServiceInMain(s *Service) error {
 		return err
 	}
 	fmt.Println("-- script import main.go--")
-	dir = strings.Replace(dir, GOPATH+"/src/", "", -1)
+	dir = strings.ReplaceAll(dir, GOPATH+"/src/", "")
 	repo_import_alias := fmt.Sprintf("_%s_%s", s.Name, REPO)
 	us_import_alias := fmt.Sprintf("_%s_%s", s.Name, USECASE)
 	http_import_alias := fmt.Sprintf("_%s_%s", s.Name, HTTP)
