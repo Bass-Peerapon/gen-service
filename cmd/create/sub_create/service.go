@@ -136,7 +136,7 @@ func New{{.CamelCase}}Repository(client *psql.Client) {{.Name}}.{{.CamelCase}}Re
 
 var tmpUsecase = `
 package usecase
-type {{.CamelCase}}Usecase struct {
+type {{.LowerCamelCase}}Usecase struct {
 	{{.LowerCamelCase}}Repo {{.Name}}.{{.CamelCase}}Repository
 }
 
@@ -149,7 +149,7 @@ func New{{.CamelCase}}Usecase({{.LowerCamelCase}}Repo {{.Name}}.{{.CamelCase}}Re
 
 var tmpHttp = `
 package http
-type {{.CamelCase}}Handler struct {
+type {{.LowerCamelCase}}Handler struct {
 	{{.LowerCamelCase}}Us {{.Name}}.{{.CamelCase}}Usecase
 }
 
